@@ -1,5 +1,7 @@
 import json
 
+from .utils import get_data_file_path
+
 # List of nutrients to find with their possible alternative names
 nutrients_to_find = {
     "Vitamin A": ["Vitamin A"],
@@ -11,21 +13,11 @@ nutrients_to_find = {
     "Selen": ["Selen", "Selenium", "Se"]
 }
 
-nutrients_to_avoid = {
-    "Cholesterol": "Kolest",
-    "Retinol": "Retinol",
-    "Trans fatty acids": "Trans",
-    "EPA": "C20:5n-3Eikosapentaensyre",  # assumed to be animal-derived
-    "DPA": "C22:5n-3Dokosapentaensyre",  # assumed to be animal-derived
-    "DHA": "C22:6n-3Dokosaheksaensyre",  # assumed to be animal-derived
-    "Taurine": "TAURINE",  # amino acid primarily from animal sources
-    "Creatine": "CREATINE",  # compound primarily from animal sources
-    "Carnosine": "CARNOSINE"  # dipeptide primarily from animal sources
-}
-
-# Read the nutrients.json file
 try:
-    with open('nutrients.json', 'r', encoding='utf-8') as file:
+    # Read the nutrients.json file
+    # Get the absolute path to the data file
+    abs_file_path = get_data_file_path('nutrients.json')
+    with open(abs_file_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
 
     # Check if the file has the expected structure
@@ -42,7 +34,6 @@ try:
     # Search for each nutrient
     for nutrient in data['nutrients']:
         name = nutrient.get('name', '')
-        print("Considering nutrient", name)
 
         # Check if this nutrient matches any of our search terms
         for original, alternatives in nutrients_to_find.items():
@@ -54,25 +45,8 @@ try:
                         results[original] = []
                     results[original].append((name, nutrient_id))
                     found_original_nutrients[original] = True
-                    print(f"Found match for '{original}': {name} - nutrientId: {nutrient_id}")
-
-    # Print a summary of the results
-    print("\nSUMMARY:")
-    for original in nutrients_to_find.keys():
-        if original in results:
-            print(f"{original}:")
-            for name, nutrient_id in set(results[original]):
-                print(f"  - {name}: {nutrient_id}")
-        else:
-            print(f"{original}: Not found")
-
-    # Check if we found all the nutrients
-    for original, found in found_original_nutrients.items():
-        if not found:
-            print(f"Warning: Could not find any match for '{original}' in the nutrients.json file.")
 
     # Generate Python code listing all the nutrientId values found
-    print("\n# Python code listing all nutrientId values found:")
     print("nutrient_ids = {")
     for original in nutrients_to_find.keys():
         if original in results:

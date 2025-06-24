@@ -1,6 +1,8 @@
 import json
 import re
 
+from .utils import get_data_file_path
+
 boring_langual_codes = {
     "B3749",  # supplements
     "A0806",  # oil product only
@@ -24,11 +26,10 @@ boring_langual_codes = {
     "Z0169",  # alcohol content
     "Z0170",  # alcohol content
     "Z0171",  # alcohol content
-    "A0297"  # wine
-    "A0298"  # wine
-    "A0299"  # wine
-    "A0224"  # wine
-
+    "A0297",  # wine
+    "A0298",  # wine
+    "A0299",  # wine
+    "A0224"   # wine
 }
 
 allow_listed_langual_codes = {
@@ -39,7 +40,7 @@ allow_listed_langual_codes = {
     "A0840",  # Beverage (NON-MILK) (EUROFIR)
     "P0200",  # No pork added
     "P0201",  # No beef added
-    "P0175"  # Egg free claim or use
+    "P0175"   # Egg free claim or use
 }
 
 
@@ -54,7 +55,9 @@ def read_langual_json(file_path='langual.json'):
         dict: Parsed JSON data
     """
     try:
-        with open(file_path, 'r', encoding='utf-8') as file:
+        # Get the absolute path to the data file
+        abs_file_path = get_data_file_path(file_path)
+        with open(abs_file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
         return data
     except FileNotFoundError:
@@ -68,7 +71,7 @@ def read_langual_json(file_path='langual.json'):
 def find_non_vegan_langual_codes():
     """
     Find LanguaL codes that contain non-vegan keywords
-    
+
     Returns:
         set: Set of non-vegan LanguaL codes
     """
@@ -85,8 +88,8 @@ def find_non_vegan_langual_codes():
         'fish', 'salmon', 'tuna', 'cod', 'herring', 'sardine', 'mackerel', 'seafood',
         'shellfish', 'shrimp', 'crab', 'lobster', 'oyster', 'mussel', 'clam',
         'gelatin', 'gelatine', 'collagen',
-        'lard', 'tallow', 'suet', 'game', 'batrachian'
-                                          'cow', 'pig', 'sheep', 'goat', 'animal',
+        'lard', 'tallow', 'suet', 'game', 'batrachian',
+        'cow', 'pig', 'sheep', 'goat', 'animal',
         'bone', 'blood', 'organ',
         'isinglass', 'carmine', 'cochineal', 'shellac'
     ]
