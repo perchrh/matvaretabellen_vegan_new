@@ -4,7 +4,7 @@ import logging
 import vegan_foods
 
 
-def to_common_unit(quantity_raw, unit):
+def quantity_in_mcg(quantity_raw, unit):
     if unit == 'g':
         return quantity_raw * 1000000.0
     elif unit == 'mg':
@@ -32,13 +32,20 @@ def map_to_compact_data_objects(foods, target_nutrients):
             if nutrient['nutrientId'] in target_nutrients_ids:
                 quantity_raw = nutrient.get('quantity', 0.0)
                 unit = nutrient.get('unit', 'g')
-                quantity = float(to_common_unit(quantity_raw, unit))
+                quantity = float(quantity_in_mcg(quantity_raw, unit))
 
                 nutrient_data = {'id': nutrient['nutrientId'],
                                  'quantity_µg': quantity,
                                  }
                 data_item['nutrients'].append(nutrient_data)
-        food_data.append(data_item)
+        if len(data_item['nutrients']) == 0:
+            logger.error(
+                "No nutrients found for food '%s' (%s)",
+                data_item['name'],
+                data_item['id']
+            )
+        else:
+            food_data.append(data_item)
     return food_data
 
 
@@ -57,3 +64,5 @@ if __name__ == "__main__":
     food_data = map_to_compact_data_objects(foods, target_nutrients)
 
     logger.debug("food_data: %s", food_data)
+
+    # Now define the optimization problem and data in pymoo to produce the pareto front
