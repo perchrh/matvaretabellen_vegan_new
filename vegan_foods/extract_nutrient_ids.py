@@ -1,6 +1,6 @@
 import json
 
-from .utils import get_data_file_path
+from .utils import get_data_file_path, logger
 
 # List of nutrients to find with their possible alternative names
 nutrients_to_find = {
@@ -22,7 +22,7 @@ try:
 
     # Check if the file has the expected structure
     if 'nutrients' not in data:
-        print("Error: 'nutrients' key not found in the JSON file.")
+        logger.debug("Error: 'nutrients' key not found in the JSON file.")
         exit(1)
 
     # Create a dictionary to store the results
@@ -47,7 +47,7 @@ try:
                     found_original_nutrients[original] = True
 
     # Generate Python code listing all the nutrientId values found
-    print("nutrient_ids = {")
+    logger.debug("nutrient_ids = {")
     for original in nutrients_to_find.keys():
         if original in results:
             # Get unique nutrient IDs for this original nutrient
@@ -57,14 +57,14 @@ try:
                 ids_str = "[" + ", ".join(f'"{id}"' for id in unique_ids) + "]"
             else:
                 ids_str = f'"{next(iter(unique_ids))}"'
-            print(f'    "{original}": {ids_str},')
+            logger.debug('    "%s": %s,', original, ids_str)
         else:
-            print(f'    "{original}": None,  # Not found')
-    print("}")
+            logger.debug('    "%s": None,  # Not found', original)
+    logger.debug("}")
 
 except FileNotFoundError:
-    print("Error: File 'nutrients.json' not found.")
+    logger.debug("Error: File 'nutrients.json' not found.")
 except json.JSONDecodeError:
-    print("Error: Unable to parse 'nutrients.json' as JSON.")
+    logger.debug("Error: Unable to parse 'nutrients.json' as JSON.")
 except Exception as e:
-    print(f"Error: {str(e)}")
+    logger.debug("Error: %s", str(e))

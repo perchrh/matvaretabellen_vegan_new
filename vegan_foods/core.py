@@ -3,6 +3,7 @@ import itertools
 from .find_non_vegan_langual_codes import dynamically_determine_non_vegan_langual_codes
 from .find_nutrients import nutrients_to_avoid, nutrients_to_find
 from .parse import read_foods_json
+from .utils import logger
 
 vegan_food_groups = {
     "Korn- og bakevarer": "5",
@@ -67,11 +68,11 @@ def find_relevant_vegan_foods():
 
 def print_relevant_foods():
     relevant_foods = find_relevant_vegan_foods()
-    
+
     for food in relevant_foods:
-        print(food['foodName'])
-    print("finished printing relevant foods", len(relevant_foods))
-    
+        logger.debug(food['foodName'])
+    logger.debug("finished printing relevant foods %s", len(relevant_foods))
+
     # TODO now process the relevant foods
-    
+
     return relevant_foods

@@ -1,6 +1,6 @@
 import json
 
-from .utils import get_data_file_path
+from .utils import get_data_file_path, logger
 
 # List of nutrients to find with their possible alternative names
 nutrients_to_find = {
@@ -12,6 +12,9 @@ nutrients_to_find = {
     "Sink": ["Sink", "Zinc", "Zn"],
     "Selen": ["Selen", "Selenium", "Se"]
 }
+
+def target_nutrients():
+    return nutrients_to_find
 
 nutrients_to_avoid = {
     "Cholesterol": "Kolest",
@@ -34,7 +37,7 @@ try:
 
     # Check if the file has the expected structure
     if 'nutrients' not in data:
-        print("Error: 'nutrients' key not found in the JSON file.")
+        logger.debug("Error: 'nutrients' key not found in the JSON file.")
         exit(1)
 
     # Create a dictionary to store the results
@@ -46,7 +49,7 @@ try:
     # Search for each nutrient
     for nutrient in data['nutrients']:
         name = nutrient.get('name', '')
-        print("Considering nutrient", name)
+        logger.debug("Considering nutrient %s", name)
 
         # Check if this nutrient matches any of our search terms
         for original, alternatives in nutrients_to_find.items():
@@ -58,26 +61,26 @@ try:
                         results[original] = []
                     results[original].append((name, nutrient_id))
                     found_original_nutrients[original] = True
-                    print(f"Found match for '{original}': {name} - nutrientId: {nutrient_id}")
+                    logger.debug("Found match for '%s': %s - nutrientId: %s", original, name, nutrient_id)
 
     # Print a summary of the results
-    print("\nSUMMARY:")
+    logger.debug("\nSUMMARY:")
     for original in nutrients_to_find.keys():
         if original in results:
-            print(f"{original}:")
+            logger.debug("%s:", original)
             for name, nutrient_id in set(results[original]):
-                print(f"  - {name}: {nutrient_id}")
+                logger.debug("  - %s: %s", name, nutrient_id)
         else:
-            print(f"{original}: Not found")
+            logger.debug("%s: Not found", original)
 
     # Check if we found all the nutrients
     for original, found in found_original_nutrients.items():
         if not found:
-            print(f"Warning: Could not find any match for '{original}' in the nutrients.json file.")
+            logger.debug("Warning: Could not find any match for '%s' in the nutrients.json file.", original)
 
     # Generate Python code listing all the nutrientId values found
-    print("\n# Python code listing all nutrientId values found:")
-    print("nutrient_ids = {")
+    logger.debug("\n# Python code listing all nutrientId values found:")
+    logger.debug("nutrient_ids = {")
     for original in nutrients_to_find.keys():
         if original in results:
             # Get unique nutrient IDs for this original nutrient
@@ -87,14 +90,14 @@ try:
                 ids_str = "[" + ", ".join(f'"{id}"' for id in unique_ids) + "]"
             else:
                 ids_str = f'"{next(iter(unique_ids))}"'
-            print(f'    "{original}": {ids_str},')
+            logger.debug('    "%s": %s,', original, ids_str)
         else:
-            print(f'    "{original}": None,  # Not found')
-    print("}")
+            logger.debug('    "%s": None,  # Not found', original)
+    logger.debug("}")
 
 except FileNotFoundError:
-    print("Error: File 'nutrients.json' not found.")
+    logger.debug("Error: File 'nutrients.json' not found.")
 except json.JSONDecodeError:
-    print("Error: Unable to parse 'nutrients.json' as JSON.")
+    logger.debug("Error: Unable to parse 'nutrients.json' as JSON.")
 except Exception as e:
-    print(f"Error: {str(e)}")
+    logger.debug("Error: %s", str(e))

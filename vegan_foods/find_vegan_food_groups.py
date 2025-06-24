@@ -1,5 +1,7 @@
 import json
 
+from .utils import logger
+
 food_categories = [
     "Korn- og bakevarer",
     "Grønnsaker",
@@ -38,25 +40,25 @@ def create_category_mapping():
         "Diverse matvarer og retter": "Other foods and dishes",
         "Spedbarnsmat": "Infant food"
     }
-    
+
     # Load food groups from JSON
     food_groups = load_food_groups()
-    
+
     # Create mapping from English names to foodGroupIds
     english_to_id = {}
     for group in food_groups:
         # Only include top-level groups (no parentId)
         if 'parentId' not in group:
             english_to_id[group['name']] = group['foodGroupId']
-    
+
     # Create final mapping from Norwegian to foodGroupId
     category_to_id = {}
     for norwegian, english in norwegian_to_english.items():
         if english in english_to_id:
             category_to_id[norwegian] = english_to_id[english]
         else:
-            print(f"Warning: Could not find foodGroupId for '{norwegian}' -> '{english}'")
-    
+            logger.debug("Warning: Could not find foodGroupId for '%s' -> '%s'", norwegian, english)
+
     return category_to_id
 
 def main():
@@ -64,7 +66,7 @@ def main():
 
     for category in food_categories:
         if category in category_to_id:
-            print(f"{category}: {category_to_id[category]}")
+            logger.debug("%s: %s", category, category_to_id[category])
 
 if __name__ == "__main__":
     main()

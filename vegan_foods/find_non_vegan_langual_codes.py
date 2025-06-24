@@ -1,7 +1,7 @@
 import json
 import re
 
-from .utils import get_data_file_path
+from .utils import get_data_file_path, logger
 
 boring_langual_codes = {
     "B3749",  # supplements
@@ -61,10 +61,10 @@ def read_langual_json(file_path='langual.json'):
             data = json.load(file)
         return data
     except FileNotFoundError:
-        print(f"Error: File '{file_path}' not found.")
+        logger.debug("Error: File '%s' not found.", file_path)
         return None
     except json.JSONDecodeError:
-        print(f"Error: Unable to parse '{file_path}' as JSON.")
+        logger.debug("Error: Unable to parse '%s' as JSON.", file_path)
         return None
 
 
@@ -112,7 +112,7 @@ def find_non_vegan_langual_codes():
             contains_allow_listed_words = len(intersection) > 0
             if re.search(r'\b' + keyword + r'\b', description) and not contains_allow_listed_words:
                 non_vegan_codes.add(code)
-                print(f"Found non-vegan code: {code} - {item.get('description', '')}")
+                logger.debug("Found non-vegan code: %s - %s", code, item.get('description', ''))
                 break
 
     return non_vegan_codes
@@ -126,15 +126,15 @@ def dynamically_determine_non_vegan_langual_codes():
     # Dynamically found codes
     all_non_vegan_codes = find_non_vegan_langual_codes().union(boring_langual_codes) - allow_listed_langual_codes
 
-    print(f"\nTotal non-vegan LanguaL codes found: {len(all_non_vegan_codes)}")
+    logger.debug("\nTotal non-vegan LanguaL codes found: %s", len(all_non_vegan_codes))
     for code in sorted(all_non_vegan_codes):
-        print(f'    "{code}",')
+        logger.debug('    "%s",', code)
 
     return sorted(all_non_vegan_codes)
 
 
 def main():
-    print("Searching for non-vegan LanguaL codes...")
+    logger.debug("Searching for non-vegan LanguaL codes...")
 
     dynamically_determine_non_vegan_langual_codes()
 

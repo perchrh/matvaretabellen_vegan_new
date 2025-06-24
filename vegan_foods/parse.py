@@ -1,6 +1,6 @@
 import json
 
-from .utils import get_data_file_path
+from .utils import get_data_file_path, logger
 
 
 def read_foods_json(file_path='foods.json'):
@@ -20,10 +20,10 @@ def read_foods_json(file_path='foods.json'):
             data = json.load(file)
         return data
     except FileNotFoundError:
-        print(f"Error: File '{file_path}' not found.")
+        logger.debug("Error: File '%s' not found.", file_path)
         return None
     except json.JSONDecodeError:
-        print(f"Error: Unable to parse '{file_path}' as JSON.")
+        logger.debug("Error: Unable to parse '%s' as JSON.", file_path)
         return None
 
 
@@ -83,20 +83,20 @@ def main():
         return
 
     # Print the total number of food items
-    print(f"Total number of food items: {len(data['foods'])}")
+    logger.debug("Total number of food items: %s", len(data['foods']))
 
     # Example 1: Find a specific food by name
     food = get_food_by_name(data, "Adzuki beans")
     if food:
-        print(f"\nFound food: {food['foodName']}")
-        print(f"Calories: {food['calories']['quantity']} {food['calories']['unit']}")
-        print(f"Latin name: {food.get('latinName', 'N/A')}")
+        logger.debug("\nFound food: %s", food['foodName'])
+        logger.debug("Calories: %s %s", food['calories']['quantity'], food['calories']['unit'])
+        logger.debug("Latin name: %s", food.get('latinName', 'N/A'))
 
     # Example 2: Find foods with high iron content
     iron_foods = get_foods_by_nutrient(data, "Fe", 5.0)  # Iron with minimum 5.0 units
-    print(f"\nFound {len(iron_foods)} foods with high iron content:")
+    logger.debug("\nFound %s foods with high iron content:", len(iron_foods))
     for i, food in enumerate(iron_foods[:5], 1):  # Show first 5 results
-        print(f"{i}. {food['foodName']}")
+        logger.debug("%s. %s", i, food['foodName'])
 
     # Example 3: Get all unique nutrient IDs
     nutrient_ids = set()
@@ -106,8 +106,8 @@ def main():
                 if 'nutrientId' in constituent:
                     nutrient_ids.add(constituent['nutrientId'])
 
-    print(f"\nTotal unique nutrients: {len(nutrient_ids)}")
-    print(f"Sample nutrients: {list(nutrient_ids)[:5]}")
+    logger.debug("\nTotal unique nutrients: %s", len(nutrient_ids))
+    logger.debug("Sample nutrients: %s", list(nutrient_ids)[:5])
 
 
 if __name__ == "__main__":
