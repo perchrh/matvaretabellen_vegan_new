@@ -5,6 +5,8 @@ from .utils import get_data_file_path, logger
 
 boring_langual_codes = {
     "B3749",  # supplements
+    "A0286",  # Gravy or sauce (US CFR)
+    "A0862",  # Savoury sauce (EUROFIR)
     "A0806",  # oil product only
     "H0175",  # fizzy drinks
     "A0134",  # Salt or salt substitute (US CFR)
@@ -19,6 +21,10 @@ boring_langual_codes = {
     "A0200",  # Distinctive distilled spirits (US CFR)
     "A0850",  # Liqueur or spirits (EUROFIR)
     "A0847",  # Beer or beer-like beverage (EUROFIR)
+    "A0295",  # Alcoholic beverage analog (US CFR)
+    "A0847",  # Beer or beer-like beverage (EUROFIR)
+    "A0295",  # Alcoholic beverage analog (US CFR)
+    "A0849",  # Wine, fortified wine or wine-like beverage (EUROFIR)
     "Z0165",  # alcohol content
     "Z0166",  # alcohol content
     "Z0167",  # alcohol content
@@ -29,7 +35,7 @@ boring_langual_codes = {
     "A0297",  # wine
     "A0298",  # wine
     "A0299",  # wine
-    "A0224"   # wine
+    "A0224"  # wine
 }
 
 allow_listed_langual_codes = {
@@ -40,7 +46,7 @@ allow_listed_langual_codes = {
     "A0840",  # Beverage (NON-MILK) (EUROFIR)
     "P0200",  # No pork added
     "P0201",  # No beef added
-    "P0175"   # Egg free claim or use
+    "P0175"  # Egg free claim or use
 }
 
 
