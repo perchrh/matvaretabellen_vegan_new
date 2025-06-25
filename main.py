@@ -89,7 +89,7 @@ if __name__ == "__main__":
         dominate_count[idx] = count
     sorted_dominate_count = sorted(dominate_count.items(), key=lambda x: x[1])
 
-    top_count = 20
+    top_count = 50
     print(f"The top {top_count} least dominated foods are:")
     for idx, count in sorted_dominate_count[:top_count]:
         food = foods[idx]

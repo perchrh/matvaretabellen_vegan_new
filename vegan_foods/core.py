@@ -31,7 +31,10 @@ def is_vegan(food):
         unwanted_langual_codes = langual_codes.intersection(non_vegan_langual_codes)
         no_non_vegan_langual_codes = len(unwanted_langual_codes) == 0
 
-        return no_non_vegan_langual_codes
+        # Filter out some dried foods, to prefer the cooked/wet entries for the same
+        is_dried_legumes = "A0831" in langual_codes and "J0116" in langual_codes and not "H0259" in langual_codes
+
+        return no_non_vegan_langual_codes and not is_dried_legumes
     else:
         return False
 
