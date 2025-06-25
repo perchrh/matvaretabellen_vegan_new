@@ -1,4 +1,3 @@
-import itertools
 import logging
 
 import numpy as np
@@ -7,65 +6,49 @@ import vegan_foods
 
 
 def quantity_in_mcg(quantity_raw, unit):
-    if unit == 'g':
-        return quantity_raw * 1000000.0
-    elif unit == 'mg':
-        return quantity_raw * 1000.0
-    elif unit == 'µg':
-        return quantity_raw
-    elif unit == 'µg-RE':
-        return quantity_raw
-    else:
-        raise Exception("unknown unit %s", unit)
+    """Convert quantity to micrograms for standardization"""
+    conversions = {
+        'µg-RE': 1,
+        'µg': 1,
+        'mg': 1000,
+        'g': 1000000,
+    }
+    return quantity_raw * conversions[unit]
 
 
-"""
-list of foods: 
-{
-    'id': str, 
-    'name': str, 
-    'nutrients': dict[str, float]
-} 
-"""
+def safe_get_quantity_row(food, target_nutrient_list):
+    """Extract nutrient quantities for a single food item using numpy"""
+    quantity_row = np.zeros(len(target_nutrient_list))
 
-
-def map_to_compact_data_objects(foods, target_nutrients_ids):
-    # now map the food dicts into more compact representations, with a reference back to the full data object
-    food_data = list()
-    for food in foods:
-        data_object = dict()
-        data_object['id'] = food['foodId']
-        data_object['name'] = food['foodName']
-        for nutrient in food['constituents']:
-            nutrient_id = nutrient['nutrientId']
-            if nutrient_id in target_nutrients_ids:
-                quantity_raw = nutrient.get('quantity', 0.0)
-                unit = nutrient.get('unit', 'µg')
-                quantity = float(quantity_in_mcg(quantity_raw, unit))
-
-                data_object[nutrient_id] = quantity
-
-            food_data.append(data_object)
-    return food_data
-
-
-def safe_get_quantity_row(food, target_nutrients: list, ):
-    quantity_row = list()
+    # Create a mapping of nutrient IDs to quantities for this food
+    nutrient_map = {}
     for nutrient in food['constituents']:
-        for target_nutrient in target_nutrients:  # keep the ordering from target_nutrients
-            if nutrient['nutrientId'] == target_nutrient:
-                quantity_raw = nutrient.get('quantity', 0.0)
-                unit = nutrient.get('unit', 'µg')
-                quantity = float(quantity_in_mcg(quantity_raw, unit))
-                quantity_row.append(quantity)
+        nutrient_id = nutrient['nutrientId']
+        if nutrient_id not in target_nutrient_list:
+            continue
+        quantity_raw = nutrient.get('quantity', 0.0)
+        unit = nutrient.get('unit', 'µg')
+        quantity = float(quantity_in_mcg(quantity_raw, unit))
+        nutrient_map[nutrient_id] = quantity
+
+    # Fill the quantity row based on target nutrients order
+    for i, target_nutrient in enumerate(target_nutrient_list):
+        quantity_row[i] = nutrient_map[target_nutrient]
+
     return quantity_row
 
 
 def map_to_food_nutrient_matrix(foods: list, target_nutrients: list):
-    food_matrix = list()
+    """Create a numpy matrix of foods vs nutrients
+    :param nutrients:
+    """
+    # Pre-allocate numpy array
+    food_matrix = np.zeros((len(foods), len(target_nutrients)))
+
     for food_row, food in enumerate(foods):
         quantity_row = safe_get_quantity_row(food, target_nutrients)
-        food_matrix.append(quantity_row)
+        food_matrix[food_row] = quantity_row
+
     return food_matrix
 
 
@@ -83,6 +66,7 @@ if __name__ == "__main__":
 
     food_matrix = map_to_food_nutrient_matrix(foods, target_nutrients)
 
+    logger.debug("food_matrix created of shape %s", np.shape(food_matrix))
     logger.debug("food_matrix: %s", food_matrix)
 
     # Present it as a multi-objective optimization problem.

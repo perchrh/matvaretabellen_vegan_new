@@ -1,4 +1,5 @@
 import itertools
+import numpy as np
 
 from .find_non_vegan_langual_codes import dynamically_determine_non_vegan_langual_codes
 from .find_nutrients import nutrients_to_avoid, target_nutrients
@@ -45,27 +46,18 @@ def is_vegan(food):
 
 
 
+
+
 def find_relevant_vegan_foods():
     foods = read_foods_json()
     target_nutrient_ids = set(target_nutrients().values())
-    relevant_foods = list()
+    relevant_foods = []
+
     for food in foods['foods']:
         if not is_vegan(food):
             continue
         nutrient_ids = set(x["nutrientId"] for x in food.get('constituents', []))
         if target_nutrient_ids.intersection(nutrient_ids):
             relevant_foods.append(food)
-
-    return relevant_foods
-
-
-def print_relevant_foods():
-    relevant_foods = find_relevant_vegan_foods()
-
-    for food in relevant_foods:
-        logger.debug(food['foodName'])
-    logger.debug("finished printing relevant foods %s", len(relevant_foods))
-
-    # TODO now process the relevant foods
 
     return relevant_foods
