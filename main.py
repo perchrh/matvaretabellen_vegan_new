@@ -11,41 +11,37 @@ def quantity_in_mcg(quantity_raw, unit):
         return quantity_raw * 1000.0
     elif unit == 'µg':
         return quantity_raw
+    elif unit == 'µg-RE':
+        return quantity_raw
     else:
-        raise Exception("unknown unit")
+        raise Exception("unknown unit %s", unit)
 
 
-def map_to_compact_data_objects(foods, target_nutrients):
-    # flatten the dictionary values
-    target_nutrients_ids = set(itertools.chain.from_iterable(
-        [ids] if isinstance(ids, str) else ids
-        for ids in target_nutrients.values()
-    ))
+"""
+list of foods: 
+{
+    'id': str, 
+    'name': str, 
+    'nutrients': dict[str, float]
+} 
+"""
+def map_to_compact_data_objects(foods, target_nutrients_ids):
     # now map the food dicts into more compact representations, with a reference back to the full data object
     food_data = list()
     for food in foods:
-        data_item = dict()
-        data_item['id'] = food['foodId']
-        data_item['name'] = food['foodName']
-        data_item['nutrients'] = list()
+        data_object = dict()
+        data_object['id'] = food['foodId']
+        data_object['name'] = food['foodName']
         for nutrient in food['constituents']:
-            if nutrient['nutrientId'] in target_nutrients_ids:
+            nutrient_id = nutrient['nutrientId']
+            if nutrient_id in target_nutrients_ids:
                 quantity_raw = nutrient.get('quantity', 0.0)
                 unit = nutrient.get('unit', 'g')
                 quantity = float(quantity_in_mcg(quantity_raw, unit))
 
-                nutrient_data = {'id': nutrient['nutrientId'],
-                                 'quantity_µg': quantity,
-                                 }
-                data_item['nutrients'].append(nutrient_data)
-        if len(data_item['nutrients']) == 0:
-            logger.error(
-                "No nutrients found for food '%s' (%s)",
-                data_item['name'],
-                data_item['id']
-            )
-        else:
-            food_data.append(data_item)
+                data_object[nutrient_id] = quantity
+
+            food_data.append(data_object)
     return food_data
 
 
@@ -61,8 +57,11 @@ if __name__ == "__main__":
     status = ["considering", len(foods), "foods", "regarding", len(target_nutrients), "nutrients"]
     logger.info(" ".join(str(x) for x in status))
 
-    food_data = map_to_compact_data_objects(foods, target_nutrients)
+    # flatten the dictionary values
+    target_nutrients_ids = set(itertools.chain.from_iterable(
+        [ids] if isinstance(ids, str) else ids
+        for ids in target_nutrients.values()
+    ))
+    food_data = map_to_compact_data_objects(foods, target_nutrients_ids)
 
     logger.debug("food_data: %s", food_data)
-
-    # Now define the optimization problem and data in pymoo to produce the pareto front

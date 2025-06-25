@@ -3,23 +3,27 @@ import json
 from .utils import get_data_file_path, logger
 
 # List of nutrients to find with their possible alternative names
+# TODO use the EUROFIR codes, if always present
 nutrients_to_find = {
-    "Vitamin A": ["Vitamin A"],
-    "Riboflavin": ["Riboflavin", "Vitamin B2"],
-    "Vitamin B6": ["Vitamin B6", "pyridoxine"],
-    "Kalsium": ["Kalsium", "Calcium", "Ca"],
-    "Jern": ["Jern", "Iron", "Fe"],
-    "Sink": ["Sink", "Zinc", "Zn"],
-    "Selen": ["Selen", "Selenium", "Se"]
+    #"Vitamin A": ["Vit A", "Vit A RE", "B-karo"],
+    "Vitamin A": ["Vit A RE"],
+    "Riboflavin": ["Vit B2"],
+    "Vitamin B6": ["Vit B6"],
+    "Kalsium": ["Ca"],
+    "Jern": ["Fe"],
+    "Sink": ["Zn"],
+    "Selen": ["Se"]
 }
+
 
 def target_nutrients():
     return nutrients_to_find
 
+
 nutrients_to_avoid = {
-    "Cholesterol": "Kolest",
-    "Retinol": "Retinol",
-    "Trans fatty acids": "Trans",
+    "Cholesterol": "Kolest", # animal-derived
+    "Retinol": "Retinol", # animal-derived
+    "Trans fatty acids": "Trans", # animal-derived
     "EPA": "C20:5n-3Eikosapentaensyre",  # assumed to be animal-derived
     "DPA": "C22:5n-3Dokosapentaensyre",  # assumed to be animal-derived
     "DHA": "C22:6n-3Dokosaheksaensyre",  # assumed to be animal-derived
