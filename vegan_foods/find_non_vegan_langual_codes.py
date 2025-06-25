@@ -5,6 +5,7 @@ from .utils import get_data_file_path, logger
 
 boring_langual_codes = {
     "B3749",  # supplements
+    "B3764",  # supplements
     "A0286",  # Gravy or sauce (US CFR)
     "A0862",  # Savoury sauce (EUROFIR)
     "A0806",  # oil product only
