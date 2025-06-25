@@ -15,6 +15,8 @@ boring_langual_codes = {
     "A0854",  # Baking ingredient (EUROFIR)
     "A0133",  # Flavoring or seasoning (US CFR)
     "A0853",  # Spice, condiment or other ingredient (EUROFIR)
+    "A0113",  # Spice or herb (US CFR)
+    "A0857",  # Herb or spice (EUROFIR)
     "A0845",  # Coffee, tea, cocoa (EUROFIR)
     "A0299",  # Light wine, 7-14% alcohol (US CFR)
     "A0849",  # Wine, fortified wine or wine-like beverage (EUROFIR)

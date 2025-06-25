@@ -1,11 +1,7 @@
-import json
-
-
 # List of nutrients to find with their possible alternative names
 # TODO use the EUROFIR codes, if always present
 def target_nutrients():
     return {
-        # "Vitamin A": ["Vit A", "Vit A RE", "B-karo"],
         "Vitamin A": "Vit A RE",
         "Riboflavin": "Vit B2",
         "Vitamin B6": "Vit B6",

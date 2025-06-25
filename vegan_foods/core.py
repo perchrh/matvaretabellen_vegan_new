@@ -10,13 +10,11 @@ vegan_food_groups = {
     "Frukt og bær": "13",
     "Nøtter og frø": "14",
     "Poteter": "15",
-    "Urter og krydder": "16",
     "Spisefett": "8",  # potentially
     "Diverse matvarer og retter": "10",  # potentially
-    "Spedbarnsmat": "11",  # potentially
 }.values()
 
-non_vegan_ingredients = nutrients_to_avoid.values()
+non_vegan_nutrients = nutrients_to_avoid.values()
 non_vegan_langual_codes = dynamically_determine_non_vegan_langual_codes()
 
 
@@ -25,7 +23,7 @@ def is_vegan(food):
     primary_group_id = group_id.split('.')[0]
     if primary_group_id in vegan_food_groups:
         for c in food.get('constituents', []):
-            if c in non_vegan_ingredients:
+            if c['nutrientId'] in non_vegan_nutrients:
                 if c.get('quantity') not in (None, 0.0):
                     return False  # more than allowed of illegal ingredient
 

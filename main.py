@@ -44,14 +44,12 @@ def map_to_food_nutrient_matrix(foods: list, target_nutrients: list):
     """
     # Pre-allocate numpy array
     food_matrix = np.zeros((len(foods), len(target_nutrients)))
-    front_map = list()
 
     for food_row, food in enumerate(foods):
         quantity_row = safe_get_quantity_row(food, target_nutrients)
         food_matrix[food_row] = quantity_row
-        front_map.append(food['foodId'])
 
-    return food_matrix, front_map
+    return food_matrix
 
 
 def create_nutrients_summary(food):
@@ -78,18 +76,16 @@ if __name__ == "__main__":
     logger.info(" ".join(str(x) for x in status))
 
     # food matrix F
-    F, front_map = map_to_food_nutrient_matrix(foods, target_nutrients)
+    F = map_to_food_nutrient_matrix(foods, target_nutrients)
 
     logger.debug("food_matrix created of shape %s", np.shape(F))
-
-    F_s = (F - F.min(axis=0)) / (F.max(axis=0) - F.min(axis=0))
 
     def dominates(a, b):
         return all(ai >= bi for ai, bi in zip(a, b)) and any(ai > bi for ai, bi in zip(a, b))
 
     dominate_count = dict()
     for idx, food in enumerate(foods):
-        count = sum(dominates(F_s[i], F_s[idx]) for i in range(len(F_s)) if i != idx)
+        count = sum(dominates(F[i], F[idx]) for i in range(len(F)) if i != idx)
         dominate_count[idx] = count
     sorted_dominate_count = sorted(dominate_count.items(), key=lambda x: x[1])
 
@@ -97,6 +93,4 @@ if __name__ == "__main__":
     print(f"The top {top_count} least dominated foods are:")
     for idx, count in sorted_dominate_count[:top_count]:
         food = foods[idx]
-
-        nutrients_summary = create_nutrients_summary(food)
-        print(food['foodName'], "contains", nutrients_summary)
+        print(food['foodName'], create_nutrients_summary(food))
