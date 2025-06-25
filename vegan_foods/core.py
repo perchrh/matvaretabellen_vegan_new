@@ -1,7 +1,7 @@
 import itertools
 
 from .find_non_vegan_langual_codes import dynamically_determine_non_vegan_langual_codes
-from .find_nutrients import nutrients_to_avoid, nutrients_to_find
+from .find_nutrients import nutrients_to_avoid, target_nutrients
 from .parse import read_foods_json
 from .utils import logger
 
@@ -44,17 +44,10 @@ def is_vegan(food):
         return False
 
 
-nutrient_name_to_ids = nutrients_to_find
-
 
 def find_relevant_vegan_foods():
-    # flatten the dictionary values
-    target_nutrient_ids = set(itertools.chain.from_iterable(
-        [ids] if isinstance(ids, str) else ids
-        for ids in nutrient_name_to_ids.values()
-    ))
-
     foods = read_foods_json()
+    target_nutrient_ids = set(target_nutrients().values())
     relevant_foods = list()
     for food in foods['foods']:
         if not is_vegan(food):
