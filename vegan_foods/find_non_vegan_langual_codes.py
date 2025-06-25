@@ -8,36 +8,14 @@ boring_langual_codes = {
     "A0286",  # Gravy or sauce (US CFR)
     "A0862",  # Savoury sauce (EUROFIR)
     "A0806",  # oil product only
-    "H0175",  # fizzy drinks
     "A0134",  # Salt or salt substitute (US CFR)
     "A0856",  # Seasoning or extract (EUROFIR)
     "A0181",  # Food additive (US CFR)
+    "A0113",  # Spice or herb (US CFR)
+    "A0853",  # Spice, condiment or other ingredient (EUROFIR)
     "A0854",  # Baking ingredient (EUROFIR)
     "A0133",  # Flavoring or seasoning (US CFR)
-    "A0853",  # Spice, condiment or other ingredient (EUROFIR)
-    "A0113",  # Spice or herb (US CFR)
-    "A0857",  # Herb or spice (EUROFIR)
     "A0845",  # Coffee, tea, cocoa (EUROFIR)
-    "A0299",  # Light wine, 7-14% alcohol (US CFR)
-    "A0849",  # Wine, fortified wine or wine-like beverage (EUROFIR)
-    "A0200",  # Distinctive distilled spirits (US CFR)
-    "A0850",  # Liqueur or spirits (EUROFIR)
-    "A0847",  # Beer or beer-like beverage (EUROFIR)
-    "A0295",  # Alcoholic beverage analog (US CFR)
-    "A0847",  # Beer or beer-like beverage (EUROFIR)
-    "A0295",  # Alcoholic beverage analog (US CFR)
-    "A0849",  # Wine, fortified wine or wine-like beverage (EUROFIR)
-    "Z0165",  # alcohol content
-    "Z0166",  # alcohol content
-    "Z0167",  # alcohol content
-    "Z0168",  # alcohol content
-    "Z0169",  # alcohol content
-    "Z0170",  # alcohol content
-    "Z0171",  # alcohol content
-    "A0297",  # wine
-    "A0298",  # wine
-    "A0299",  # wine
-    "A0224"  # wine
 }
 
 allow_listed_langual_codes = {

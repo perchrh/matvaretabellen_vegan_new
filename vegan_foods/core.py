@@ -5,7 +5,6 @@ from .parse import read_foods_json
 vegan_food_groups = {
     "Korn- og bakevarer": "5",
     "Grønnsaker": "6",
-    "Drikke": "9",
     "Belgvekster": "12",
     "Frukt og bær": "13",
     "Nøtter og frø": "14",
