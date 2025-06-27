@@ -1,37 +1,21 @@
 import logging
+from collections import OrderedDict
 
 import numpy as np
 
 import vegan_foods
 
 
-def quantity_in_mcg(quantity_raw: float, unit):
-    """Convert quantity to micrograms for standardization"""
-    conversions = {
-        'µg-RE': 1.0,
-        'µg': 1.0,
-        'mg': 1000.0,
-        'g': 1000000.0,
-        'mg-ATE':1000.0,
-    }
-    return quantity_raw * conversions[unit]
-
-
 def safe_get_quantity_row(food, target_nutrient_list: list):
-    """Extract nutrient quantities for a single food item using numpy"""
     quantity_row = np.zeros(len(target_nutrient_list))
 
     # Create a mapping of nutrient IDs to quantities for this food
     nutrient_map = {}
-    # sort to make sure that we have the same ordering always
     for nutrient in food['constituents']:
         nutrient_id = nutrient['nutrientId']
-        quantity_raw = float(nutrient.get('quantity', 0.0))
-        unit = nutrient.get('unit', 'µg')
-        quantity = quantity_in_mcg(quantity_raw, unit)
-        nutrient_map[nutrient_id] = quantity
+        nutrient_map[nutrient_id] = float(nutrient.get('quantity', 0.0))
 
-    # Fill the quantity row based on target nutrients order
+    # Fill the quantity row based on target nutrients, in order
     for i, target_nutrient in enumerate(target_nutrient_list):
         quantity_row[i] = nutrient_map[target_nutrient]
 
@@ -39,9 +23,6 @@ def safe_get_quantity_row(food, target_nutrient_list: list):
 
 
 def map_to_food_nutrient_matrix(foods: list, target_nutrients: list):
-    """Create a numpy matrix of foods vs nutrients
-    :param nutrients:
-    """
     # Pre-allocate numpy array
     food_matrix = np.zeros((len(foods), len(target_nutrients)))
 
@@ -62,6 +43,32 @@ def create_nutrients_summary(food):
                     summary[key] = f"{quantity} {nutrient['unit']}"
     return summary
 
+def sort_by_least_dominated(foods, target_nutrients):
+    # food matrix F
+    F = map_to_food_nutrient_matrix(foods, target_nutrients)
+
+    logger.debug("food_matrix created of shape %s", np.shape(F))
+
+    def dominates(a, b):
+        return all(ai >= bi for ai, bi in zip(a, b)) and any(ai > bi for ai, bi in zip(a, b))
+
+    # Inspired by pareto-front and non-dominant sorting, we do a kind of dominant sorting
+    dominate_count = dict()
+    for idx, food in enumerate(foods):
+        count = sum(dominates(F[i], F[idx]) for i in range(len(F)) if i != idx)
+        dominate_count[idx] = count
+    return sorted(dominate_count.items(), key=lambda x: x[1])
+
+
+def group_by_ordered(iterable, key_func):
+    grouped = OrderedDict()
+    for item in iterable:
+        key = key_func(item)
+        if key not in grouped:
+            grouped[key] = []
+        grouped[key].append(item)
+    return grouped
+
 
 if __name__ == "__main__":
     # Configure logging to display debug messages
@@ -75,22 +82,15 @@ if __name__ == "__main__":
     status = ["considering", len(foods), "foods", "regarding", len(target_nutrients), "nutrients"]
     logger.info(" ".join(str(x) for x in status))
 
-    # food matrix F
-    F = map_to_food_nutrient_matrix(foods, target_nutrients)
+    sorted_dominate_count = sort_by_least_dominated(foods, target_nutrients)
 
-    logger.debug("food_matrix created of shape %s", np.shape(F))
 
-    def dominates(a, b):
-        return all(ai >= bi for ai, bi in zip(a, b)) and any(ai > bi for ai, bi in zip(a, b))
+    grouped = group_by_ordered(foods, key_func=lambda w: w['foodGroupId'].split(".")[0]) # group by main food group
+    top_n = 20
+    for group, values in grouped.items():
+        print("matvaregruppe ", group)
+        number = 1
+        for item in values[:top_n]:
+            print(number, item['foodName'], create_nutrients_summary(item))
+            number+=1
 
-    dominate_count = dict()
-    for idx, food in enumerate(foods):
-        count = sum(dominates(F[i], F[idx]) for i in range(len(F)) if i != idx)
-        dominate_count[idx] = count
-    sorted_dominate_count = sorted(dominate_count.items(), key=lambda x: x[1])
-
-    top_count = 50
-    print(f"The top {top_count} least dominated foods are:")
-    for idx, count in sorted_dominate_count[:top_count]:
-        food = foods[idx]
-        print(food['foodName'], create_nutrients_summary(food))

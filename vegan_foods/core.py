@@ -1,6 +1,6 @@
-from .find_non_vegan_langual_codes import dynamically_determine_non_vegan_langual_codes
-from .find_nutrients import nutrients_to_avoid, target_nutrients
-from .parse import read_foods_json
+from vegan_foods.find_non_vegan_langual_codes import dynamically_determine_non_vegan_langual_codes
+from vegan_foods.find_nutrients import nutrients_to_avoid, target_nutrients
+from vegan_foods.parse import read_foods_json
 
 vegan_food_groups = {
     "Korn- og bakevarer": "5",
@@ -8,8 +8,8 @@ vegan_food_groups = {
     "Belgvekster": "12",
     "Frukt og bær": "13",
     "Nøtter og frø": "14",
-    "Poteter": "15",
-    "Spisefett": "8",  # potentially
+    # "Poteter": "15", # uninteresting
+    #"Spisefett": "8",  # uninteresting
     "Diverse matvarer og retter": "10",  # potentially
 }.values()
 
