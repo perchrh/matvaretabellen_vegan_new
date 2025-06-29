@@ -23,7 +23,7 @@ def is_vegan(food):
 
 
 def find_relevant_vegan_foods():
-    foods = read_foods_json("foods.json", "food-groups.json")
+    foods = read_foods_json("foods.json", "food-groups.json", "nutrients.json")
     target_nutrient_ids = set(target_nutrients().values())
     relevant_foods = []
 

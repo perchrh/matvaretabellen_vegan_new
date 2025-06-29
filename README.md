@@ -2,10 +2,11 @@ Data source: https://www.matvaretabellen.no/api/
 
 load the data
 cd vegan_foods
-curl -O https://www.matvaretabellen.no/api/en/foods.json
+export LANG=nb # or nb
+curl -O https://www.matvaretabellen.no/api/$LANG/foods.json
 curl -O https://www.matvaretabellen.no/api/langual.json
-curl -O https://www.matvaretabellen.no/api/en/food-groups.json
-curl -O https://www.matvaretabellen.no/api/en/nutrients.json
+curl -O https://www.matvaretabellen.no/api/$LANG/food-groups.json
+curl -O https://www.matvaretabellen.no/api/$LANG/nutrients.json
 
 run main.py
 
