@@ -2,8 +2,8 @@
 Utility functions for the vegan_foods module.
 """
 
-import os
 import logging
+import os
 
 # Configure logger
 logger = logging.getLogger('vegan_foods')

@@ -1,5 +1,3 @@
-# List of nutrients to find with their possible alternative names
-# TODO use the EUROFIR codes, if always present
 def target_nutrients():
     return {
         "Vitamin A": "Vit A RE",

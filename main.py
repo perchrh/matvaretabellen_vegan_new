@@ -43,6 +43,7 @@ def create_nutrients_summary(food):
                     summary[key] = f"{quantity} {nutrient['unit']}"
     return summary
 
+
 def sort_by_least_dominated(foods, target_nutrients):
     # food matrix F
     F = map_to_food_nutrient_matrix(foods, target_nutrients)
@@ -83,13 +84,24 @@ if __name__ == "__main__":
     logger.info(" ".join(str(x) for x in status))
 
     sorted_dominate_count = sort_by_least_dominated(foods, target_nutrients)
+    sorted_foods = list()
+    for idx, count in sorted_dominate_count:
+        sorted_foods.append(foods[idx])
 
-    grouped = group_by_ordered(foods, key_func=lambda w: w['foodGroupName'].split(".")[0]) # group by main food group
+    grouped = group_by_ordered(sorted_foods,
+                               key_func=lambda w: w['foodGroupName'].split(".")[0])  # group by main food group
     top_n = 10
     for group, values in grouped.items():
         print("++ Food group:", group, "++")
         number = 1
         for item in values[:top_n]:
             print(number, item['foodName'], create_nutrients_summary(item))
-            number+=1
+            number += 1
 
+    top_global_n = 50
+    print("--- top", top_global_n, " foods, across all groups ---")
+    # Top-50 across-all groups
+    number = 1
+    for item in sorted_foods[:top_global_n]:
+        print(number, item['foodName'], create_nutrients_summary(item))
+        number += 1

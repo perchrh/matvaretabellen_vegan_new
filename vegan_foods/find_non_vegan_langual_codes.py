@@ -6,6 +6,13 @@ from vegan_foods.utils import get_data_file_path, logger
 boring_langual_codes = {
     "B3749",  # supplements
     "B3764",  # supplements
+    "A0134",  # Salt or salt substitute (US CFR)
+    "A0856",  # Seasoning or extract (EUROFIR)
+    "A0181",  # Food additive (US CFR)
+    "A0113",  # Spice or herb (US CFR)
+    "A0853",  # Spice, condiment or other ingredient (EUROFIR)
+    "A0854",  # Baking ingredient (EUROFIR)
+
 }
 
 allow_listed_langual_codes = {
@@ -100,7 +107,8 @@ def dynamically_determine_non_vegan_langual_codes():
     """
 
     # Dynamically found codes
-    all_undesired_langual_codes = find_non_vegan_langual_codes().union(boring_langual_codes) - allow_listed_langual_codes
+    all_undesired_langual_codes = find_non_vegan_langual_codes().union(
+        boring_langual_codes) - allow_listed_langual_codes
 
     logger.debug("\nTotal non-vegan LanguaL codes found: %s", len(all_undesired_langual_codes))
     for code in sorted(all_undesired_langual_codes):

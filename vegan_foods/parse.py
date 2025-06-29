@@ -3,7 +3,7 @@ import json
 from vegan_foods.utils import get_data_file_path
 
 
-def read_foods_json(foods: str, groups: str) -> dict\
+def read_foods_json(foods: str, groups: str) -> dict \
         :
     """
     Read and parse the foods.json file
@@ -33,6 +33,5 @@ def read_foods_json(foods: str, groups: str) -> dict\
         group_id = food['foodGroupId']
         group_name = group_id_to_name[group_id]
         food['foodGroupName'] = group_name
-
 
     return data
