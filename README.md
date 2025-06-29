@@ -13,15 +13,14 @@ Uses a type of dominant sorting to find the best foods in terms of nutrients tha
 
 Output excerpt: 
 
-++ Food group: Vegetable products ++
-1 Asparagus, canned, drained {'Vitamin A': '82 µg-RE', 'Vitamin B2': '0.1 mg', 'Vitamin B6': '0.11 mg', 'Kalsium': '16.0 mg', 'Jern': '0.4 mg', 'Sink': '0.4 mg', 'Jod': '0.7 µg'}
-2 Baby carrot, baby corn, French beans, frozen {'Vitamin A': '474 µg-RE', 'Vitamin B2': '0.05 mg', 'Vitamin B6': '0.05 mg', 'Kalsium': '35.0 mg', 'Jern': '0.8 mg', 'Sink': '0.2 mg', 'Jod': '1.0 µg'}
-3 Baby corn, canned {'Vitamin A': '23 µg-RE', 'Vitamin B2': '0.04 mg', 'Kalsium': '8.0 mg', 'Jern': '1.2 mg', 'Jod': '1.0 µg'}
-4 Bamboo shoots, canned {'Vitamin A': '1 µg-RE', 'Vitamin B2': '0.06 mg', 'Vitamin B6': '0.14 mg', 'Kalsium': '13.0 mg', 'Jern': '0.4 mg', 'Sink': '1.1 mg', 'Selen': '1.0 µg', 'Jod': '0.5 µg'}
-5 Beetroot, pickled {'Kalsium': '17.0 mg', 'Jern': '0.3 mg', 'Sink': '0.3 mg', 'Jod': '0.4 µg'}
-++ Food group: Legumes ++
-1 Beans, black, canned {'Vitamin B2': '0.1 mg', 'Kalsium': '71.0 mg', 'Jern': '2.0 mg', 'Sink': '0.9 mg'}
-2 Beans, brown, cooked  {'Vitamin A': '1 µg-RE', 'Vitamin B2': '0.06 mg', 'Vitamin B6': '0.09 mg', 'Kalsium': '48.0 mg', 'Jern': '1.8 mg', 'Sink': '0.8 mg', 'Selen': '1.0 µg', 'Jod': '3.0 µg'}
-3 Beans, green, French, frozen {'Vitamin A': '56 µg-RE', 'Vitamin B2': '0.07 mg', 'Vitamin B6': '0.06 mg', 'Kalsium': '71.0 mg', 'Jern': '0.9 mg', 'Sink': '0.3 mg'}
-4 Beans, green, French, raw {'Vitamin A': '18 µg-RE', 'Vitamin B2': '0.06 mg', 'Vitamin B6': '0.1 mg', 'Kalsium': '51.0 mg', 'Jern': '1.2 mg', 'Sink': '0.4 mg', 'Selen': '1.0 µg', 'Jod': '1.0 µg'}
-5 Beans, in chili sauce, canned {'Vitamin A': '11 µg-RE', 'Vitamin B2': '0.1 mg', 'Vitamin B6': '0.1 mg', 'Kalsium': '41.0 mg', 'Jern': '1.5 mg', 'Sink': '0.6 mg', 'Selen': '1.0 µg'}
+++ Food group: Nuts and seed products ++
+1 Almond spread, home-made {'Vitamin B2': '0.9 mg', 'Vitamin B6': '0.13 mg', 'Calsium': '255.0 mg', 'Iron': '3.4 mg', 'Zinc': '3.2 mg', 'Selenium': '2.0 µg', 'Iodine': '0.6 µg'}
+2 Cashew nut spread, home-made {'Vitamin B2': '0.06 mg', 'Vitamin B6': '0.41 mg', 'Calsium': '37.0 mg', 'Iron': '6.6 mg', 'Zinc': '5.7 mg', 'Selenium': '2.0 µg', 'Iodine': '11.0 µg'}
+3 Mixed nuts with dried fruit {'Vitamin A': '200 µg-RE', 'Vitamin B2': '0.16 mg', 'Vitamin B6': '0.25 mg', 'Calsium': '98.0 mg', 'Iron': '3.4 mg', 'Zinc': '2.4 mg', 'Selenium': '5.0 µg', 'Iodine': '2.0 µg'}
+4 Peanut butter {'Vitamin B2': '0.09 mg', 'Vitamin B6': '0.58 mg', 'Calsium': '37.0 mg', 'Iron': '2.1 mg', 'Zinc': '3.0 mg', 'Selenium': '3.0 µg', 'Iodine': '2.0 µg'}
+++ Food group: Vegetables, raw and prepared ++
+1 Kale, raw {'Vitamin A': '891 µg-RE', 'Vitamin B2': '0.13 mg', 'Vitamin B6': '0.27 mg', 'Calsium': '157.0 mg', 'Iron': '1.7 mg', 'Zinc': '0.4 mg', 'Selenium': '2.0 µg', 'Iodine': '2.0 µg'}
+2 Sweet potato, roasted {'Vitamin A': '1453 µg-RE', 'Vitamin B2': '0.08 mg', 'Vitamin B6': '0.26 mg', 'Calsium': '42.0 mg', 'Iron': '0.8 mg', 'Zinc': '0.4 mg', 'Selenium': '1.0 µg', 'Iodine': '3.0 µg'}
+3 Water-cress, raw {'Vitamin A': '264 µg-RE', 'Vitamin B2': '0.06 mg', 'Vitamin B6': '0.23 mg', 'Calsium': '138.0 mg', 'Iron': '0.7 mg', 'Zinc': '0.5 mg', 'Selenium': '2.0 µg', 'Iodine': '7.0 µg'}
+4 Carrot, imported, frozen {'Vitamin A': '1434 µg-RE', 'Vitamin B6': '0.03 mg', 'Calsium': '20.0 mg', 'Iron': '0.2 mg', 'Zinc': '0.3 mg'}
+5 Leaf beet, mangold, raw {'Vitamin A': '607 µg-RE', 'Vitamin B2': '0.09 mg', 'Vitamin B6': '0.1 mg', 'Calsium': '51.0 mg', 'Iron': '1.8 mg', 'Zinc': '0.4 mg', 'Selenium': '1.0 µg', 'Iodine': '1.0 µg'}
