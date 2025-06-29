@@ -98,10 +98,9 @@ if __name__ == "__main__":
             print(number, item['foodName'], create_nutrients_summary(item))
             number += 1
 
-    top_global_n = 50
-    print("--- top", top_global_n, " foods, across all groups ---")
-    # Top-50 across-all groups
+    global_top_n = 50
+    print("--- top", global_top_n, " foods, across all groups ---")
     number = 1
-    for item in sorted_foods[:top_global_n]:
+    for item in sorted_foods[:global_top_n]:
         print(number, item['foodName'], create_nutrients_summary(item))
         number += 1
