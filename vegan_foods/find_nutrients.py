@@ -5,13 +5,13 @@ def target_nutrients():
         "Vitamin A": "Vit A RE",
         "Vitamin B2": "Vit B2",
         "Vitamin B6": "Vit B6",
-        "Kalsium": "Ca",
-        "Jern": "Fe",
-        "Sink": "Zn",
-        "Selen": "Se",
+        "Calsium": "Ca",
+        "Iron": "Fe",
+        "Zinc": "Zn",
+        "Selenium": "Se",
         # fortified nutrients
         "Vitamin B12": "Vit B12",
-        "Jod": "I"
+        "Iodine": "I"
     }
 
 

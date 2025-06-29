@@ -84,10 +84,10 @@ if __name__ == "__main__":
 
     sorted_dominate_count = sort_by_least_dominated(foods, target_nutrients)
 
-    grouped = group_by_ordered(foods, key_func=lambda w: w['foodGroupId'].split(".")[0]) # group by main food group
+    grouped = group_by_ordered(foods, key_func=lambda w: w['foodGroupName'].split(".")[0]) # group by main food group
     top_n = 10
     for group, values in grouped.items():
-        print("matvaregruppe ", group)
+        print("++ Food group:", group, "++")
         number = 1
         for item in values[:top_n]:
             print(number, item['foodName'], create_nutrients_summary(item))
