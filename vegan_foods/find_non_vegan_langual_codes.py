@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 
 from vegan_foods.utils import get_data_file_path, logger
@@ -12,7 +13,6 @@ boring_langual_codes = {
     "A0113",  # Spice or herb (US CFR)
     "A0853",  # Spice, condiment or other ingredient (EUROFIR)
     "A0854",  # Baking ingredient (EUROFIR)
-
 }
 
 allow_listed_langual_codes = {
@@ -24,6 +24,12 @@ allow_listed_langual_codes = {
     "P0200",  # No pork added
     "P0201",  # No beef added
     "P0175"  # Egg free claim or use
+    "A1220",  # Classification of products of plant and animal origin, european community
+    "B1087",  # Human as milk source (assumed consensual)
+    "C0001",  # Part of plant or animal not known
+    "C0005",  # Part of plant or animal not applicable
+    "C0116",  # C. Part of plant or animal
+    "C0214",  # Nut milk
 }
 
 
@@ -59,8 +65,6 @@ def find_non_vegan_langual_codes():
         set: Set of non-vegan LanguaL codes
     """
     data = read_langual_json()
-    if not data:
-        return set()
 
     # Keywords that indicate non-vegan ingredients
     non_vegan_keywords = [
@@ -111,13 +115,13 @@ def dynamically_determine_non_vegan_langual_codes():
         boring_langual_codes) - allow_listed_langual_codes
 
     logger.debug("\nTotal non-vegan LanguaL codes found: %s", len(all_undesired_langual_codes))
-    for code in sorted(all_undesired_langual_codes):
-        logger.debug('    "%s",', code)
 
     return sorted(all_undesired_langual_codes)
 
 
 def main():
+    logging.basicConfig(level=logging.DEBUG, format='%(name)s - %(levelname)s - %(message)s')
+
     logger.debug("Searching for non-vegan LanguaL codes...")
 
     dynamically_determine_non_vegan_langual_codes()

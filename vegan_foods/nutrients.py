@@ -20,4 +20,5 @@ def nutrients_to_avoid():
         "FATRS"  # Trans-fats
         "RETOL",  # Retinonal
         "CHORL",  # Cholesterol
+        "HYPRO",  # Hydroxyproline, animal-derived amino acid rarely synthesized for foods
     }

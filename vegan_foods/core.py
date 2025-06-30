@@ -1,5 +1,5 @@
 from vegan_foods.find_non_vegan_langual_codes import dynamically_determine_non_vegan_langual_codes
-from vegan_foods.find_nutrients import nutrients_to_avoid, target_nutrients
+from vegan_foods.nutrients import nutrients_to_avoid, target_nutrients
 from vegan_foods.parse import read_foods_json
 
 non_vegan_nutrients = nutrients_to_avoid()
