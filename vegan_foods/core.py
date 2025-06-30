@@ -10,9 +10,9 @@ def is_vegan(food):
     for key, data in food['constituents'].items():
         if key in non_vegan_nutrients:
             if data.get('quantity') not in (None, 0.0):
-                return False  # more than allowed of illegal ingredient
+                return False  # more than zero of non-vegan nutrient
 
-    langual_codes = set(food.get('langualCodes', []))
+    langual_codes = set(food['langualCodes'])
     unwanted_langual_codes = langual_codes.intersection(non_vegan_langual_codes)
     no_non_vegan_langual_codes = len(unwanted_langual_codes) == 0
 
