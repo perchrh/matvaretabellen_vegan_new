@@ -30,6 +30,8 @@ allow_listed_langual_codes = {
     "C0005",  # Part of plant or animal not applicable
     "C0116",  # C. Part of plant or animal
     "C0214",  # Nut milk
+    "A0182",  # Milk analog (US CFR)
+    "A0788",  # Immitation milk products (EUROFIR)
 }
 
 
