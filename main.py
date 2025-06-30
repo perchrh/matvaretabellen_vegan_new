@@ -12,7 +12,7 @@ def safe_get_quantity_row(food, target_nutrient_list: list):
     # Create a mapping of nutrient IDs to quantities for this food
     nutrient_map = {}
     for nutrient in food['constituents']:
-        nutrient_id = nutrient['nutrientId']
+        nutrient_id = nutrient['euroFirId']
         nutrient_map[nutrient_id] = float(nutrient.get('quantity', 0.0))
 
     # Fill the quantity row based on target nutrients, in order
@@ -27,20 +27,20 @@ def map_to_food_nutrient_matrix(foods: list, target_nutrients: list):
     food_matrix = np.zeros((len(foods), len(target_nutrients)))
 
     for food_row, food in enumerate(foods):
-        quantity_row = safe_get_quantity_row(food, target_nutrients)
-        food_matrix[food_row] = quantity_row
+        food_matrix[food_row] = safe_get_quantity_row(food, target_nutrients)
 
     return food_matrix
 
 
 def create_nutrients_summary(food):
     summary = dict()
-    for key, value in vegan_foods.target_nutrients().items():
+    for nutrient_id in vegan_foods.target_nutrients():
         for nutrient in food['constituents']:
-            if nutrient['nutrientId'] == value and 'quantity' in nutrient:
+            if nutrient['euroFirId'] == nutrient_id and 'quantity' in nutrient:
                 quantity = nutrient['quantity']
+                name = nutrient['nutrientName']
                 if float(quantity) > 0.0:
-                    summary[key] = f"{quantity} {nutrient['unit']}"
+                    summary[name] = f"{quantity} {nutrient['unit']}"
     return summary
 
 
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(name)s - %(levelname)s - %(message)s')
 
     foods = vegan_foods.food_list()
-    target_nutrients = vegan_foods.target_nutrients().values()
+    target_nutrients = vegan_foods.target_nutrients()
 
     status = ["considering", len(foods), "foods", "regarding", len(target_nutrients), "nutrients"]
     logger.info(" ".join(str(x) for x in status))
@@ -92,7 +92,7 @@ if __name__ == "__main__":
                                key_func=lambda w: w['foodGroupName'].split(".")[0])  # group by main food group
     top_n = 10
     for group, values in grouped.items():
-        print("++ Food group:", group, "++")
+        print("++", group, "++")
         number = 1
         for item in values[:top_n]:
             print(number, item['foodName'], create_nutrients_summary(item))
