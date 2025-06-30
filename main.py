@@ -32,7 +32,7 @@ def map_to_food_nutrient_matrix(foods: list, target_nutrients: list):
 def create_nutrients_summary(food):
     summary = dict()
     nutrients = food['constituents']
-    selected_nutrients = {k: nutrients[k] for k in vegan_foods.target_nutrients()} # filter the dict
+    selected_nutrients = {k: nutrients[k] for k in vegan_foods.target_nutrients()}  # filter the dict
     for key, nutrient_data in selected_nutrients.items():
         if 'quantity' in nutrient_data:
             quantity = nutrient_data['quantity']
@@ -50,7 +50,7 @@ def sort_by_least_dominated(foods, target_nutrients):
     logger.debug("food_matrix created of shape %s", np.shape(F))
 
     def dominates(a, b):
-        return all(ai >= bi for ai, bi in zip(a, b)) and any(ai > bi for ai, bi in zip(a, b))
+        return np.all(a >= b) and np.any(a > b)
 
     # Inspired by pareto-front and non-dominant sorting, we do a kind of dominant sorting
     dominate_count = dict()

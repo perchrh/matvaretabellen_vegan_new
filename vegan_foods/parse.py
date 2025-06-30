@@ -3,17 +3,11 @@ import json
 from vegan_foods.utils import get_data_file_path
 
 
-def read_foods_json(foods: str, groups: str, nutrients: str) -> dict \
-        :
+def read_foods_json(foods: str, groups: str, nutrients: str) -> dict:
     """
-    Read and parse the foods.json file
-
-    Args:
-        s:
-        file_path (str): Path to the foods.json file
-
+    Read and parse the api files
     Returns:
-        dict: Parsed JSON data
+        dict: Parsed JSON data, not filtered
     """
     # Get the absolute path to the data file
     abs_file_path = get_data_file_path(foods)
