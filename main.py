@@ -6,6 +6,19 @@ import numpy as np
 import vegan_foods
 
 
+def quantity_in_mcg(quantity_raw, unit):
+    if unit == 'g':
+        return quantity_raw * 1000000.0
+    elif unit == 'mg':
+        return quantity_raw * 1000.0
+    elif unit == 'µg':
+        return quantity_raw
+    elif unit == 'µg-RE':
+        return quantity_raw
+    else:
+        raise Exception("unknown unit %s", unit)
+
+
 def safe_get_quantity_row(food, target_nutrients: list):
     quantity_row = np.zeros(len(target_nutrients))
 
@@ -13,8 +26,11 @@ def safe_get_quantity_row(food, target_nutrients: list):
     # Fill the quantity row based on target nutrients, in order
     for i, target_nutrient in enumerate(target_nutrients):
         nutrient_data = nutrient_map[target_nutrient]
-        quantity = float(nutrient_data.get("quantity", 0.0))
-        # We assume the same nutrient is always listed in the same unit, e.g. that calcium is always listed in 'mg'
+        quantity_raw = float(nutrient_data.get("quantity", 0.0))
+        unit = nutrient_data.get("unit", "g")
+        # We don't assume the same nutrient is always listed in the same unit, e.g. that calcium is always listed in 'mg'
+        quantity = quantity_in_mcg(quantity_raw, unit)
+
         quantity_row[i] = quantity
 
     return quantity_row
@@ -51,13 +67,14 @@ def sort_by_least_dominated(foods, target_nutrients):
     logger.debug("food_matrix created of shape %s", np.shape(F))
 
     def dominates(a, b):
+        # Candidate 'a' dominates 'b' if the below is true
         return np.all(a >= b) and np.any(a > b)
 
     # Inspired by pareto-front and non-dominant sorting, we do a kind of dominant sorting:
-    # The food that is the least dominated is first in the sorting order
+    # The food that is the least dominated is first in the sorting order.
     # If multiple foods have the same count of dominated by other foods ("dominate_count"), they come in arbitrary order,
     # i.e. all foods dominated by 1 other foods come before those dominated by 2, and
-    # there is no secondary level of sorting within those with the same "dominate_count"
+    # there is no secondary level of sorting within those with the same "dominate_count".
     dominate_count = dict()
     for idx, food in enumerate(foods):
         count = sum(dominates(F[i], F[idx]) for i in range(len(F)) if i != idx)
