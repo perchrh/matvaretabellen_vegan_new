@@ -1,7 +1,7 @@
 def target_nutrients():
     # as Euro FIR codes, in order
     return [
-        "VITA",  # Vitamin A TODO and CARTB
+        "VITA",  # Vitamin A
         "RIBF",  # Vitamin B2
         "VITB6",  # Vitamin B6
         "CA",  # Calcium
@@ -16,9 +16,8 @@ def target_nutrients():
 def nutrients_to_avoid():
     # as Euro FIR codes
     return {
-        # always animal-derived
-        "FATRS"  # Trans-fats
-        "RETOL",  # Retinol
-        "CHORL",  # Cholesterol
-        "HYPRO",  # Hydroxyproline, animal-derived amino acid rarely synthesized for foods
+        "FATRS",  # Trans-fats, always animal-derived
+        "RETOL",  # Retinol, always animal-derived
+        "CHORL",  # Cholesterol, always animal-derived
+        "CLA",  # Conjugated Linoleic Acid,	only found in ruminant fats
     }

@@ -112,7 +112,7 @@ if __name__ == "__main__":
     grouped = group_by_ordered(sorted_foods,
                                key_func=lambda w: w['foodGroupName'].split(".")[0])  # group by main food group
     top_n = 10
-    for group in sorted(grouped.keys()):
+    for group in sorted(grouped.keys()): # present groups in alphabetic order by name
         values = grouped[group]
         print("++", group, "++")
         number = 1
@@ -120,9 +120,9 @@ if __name__ == "__main__":
             print(number, item['foodName'], create_nutrients_summary(item))
             number += 1
 
-    global_top_n = 50
-    print("--- top", global_top_n, " foods, across all groups ---")
+    non_dominated_foods = [foods[f[0]] for f in sorted_dominate_count if f[1] == 0]
+    print("\n--- Top foods, across all groups ---")
     number = 1
-    for item in sorted_foods[:global_top_n]:
+    for item in non_dominated_foods:
         print(number, item['foodName'], create_nutrients_summary(item))
         number += 1
