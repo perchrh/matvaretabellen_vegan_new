@@ -18,7 +18,7 @@ def nutrients_to_avoid():
     return {
         # always animal-derived
         "FATRS"  # Trans-fats
-        "RETOL",  # Retinonal
+        "RETOL",  # Retinol
         "CHORL",  # Cholesterol
         "HYPRO",  # Hydroxyproline, animal-derived amino acid rarely synthesized for foods
     }
