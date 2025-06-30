@@ -7,9 +7,9 @@ non_vegan_langual_codes = dynamically_determine_non_vegan_langual_codes()
 
 
 def is_vegan(food):
-    for c in food.get('constituents', []):
-        if c['euroFirId'] in non_vegan_nutrients:
-            if c.get('quantity') not in (None, 0.0):
+    for key, data in food['constituents'].items():
+        if key in non_vegan_nutrients:
+            if data.get('quantity') not in (None, 0.0):
                 return False  # more than allowed of illegal ingredient
 
     langual_codes = set(food.get('langualCodes', []))
@@ -32,7 +32,7 @@ def find_relevant_vegan_foods():
         if is_dried_legumes:
             continue
 
-        nutrient_ids = set(x["euroFirId"] for x in food.get('constituents', []) if x.get("quantity"))
+        nutrient_ids = set(key for key, entry in food['constituents'].items() if entry.get("quantity"))
         target_nutrient_ids = set(target_nutrients())
         if target_nutrient_ids.intersection(nutrient_ids):
             relevant_foods.append(food)

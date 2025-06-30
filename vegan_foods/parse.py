@@ -47,20 +47,21 @@ def read_foods_json(foods: str, groups: str, nutrients: str) -> dict \
         food['foodGroupName'] = group_name
 
         # enrich nutrient data
-        valid_nutrients = list()
+        valid_nutrients_dict = dict()
         for constituent in food['constituents']:
             nutrient_id = constituent['nutrientId']
             nutrient_detail = get_nutrient_detail(nutrient_id)
             if nutrient_detail:
                 nutrient = nutrient_detail[0]
                 constituent['nutrientName'] = nutrient['name']
-                constituent['euroFirId'] = nutrient['euroFirId']
-                valid_nutrients.append(constituent)
+                eurofir_id = nutrient['euroFirId']
+                constituent['euroFirId'] = eurofir_id
+                valid_nutrients_dict[eurofir_id] = constituent
             else:
                 # We ignore nutrients with an unrecognized nutrient_id. They are considered data set errors
                 invalid_nutrient_ids.add(nutrient_id)
 
-        food['constituents'] = valid_nutrients # TODO make them a dict instead, euroFirId: [data]
+        food['constituents'] = valid_nutrients_dict
 
     if invalid_nutrient_ids:
         print(len(invalid_nutrient_ids),

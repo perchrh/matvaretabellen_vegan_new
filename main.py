@@ -6,18 +6,15 @@ import numpy as np
 import vegan_foods
 
 
-def safe_get_quantity_row(food, target_nutrient_list: list):
-    quantity_row = np.zeros(len(target_nutrient_list))
+def safe_get_quantity_row(food, target_nutrients: list):
+    quantity_row = np.zeros(len(target_nutrients))
 
-    # Create a mapping of nutrient IDs to quantities for this food
-    nutrient_map = {}
-    for nutrient in food['constituents']:
-        nutrient_id = nutrient['euroFirId']
-        nutrient_map[nutrient_id] = float(nutrient.get('quantity', 0.0))
-
+    nutrient_map = food['constituents']
     # Fill the quantity row based on target nutrients, in order
-    for i, target_nutrient in enumerate(target_nutrient_list):
-        quantity_row[i] = nutrient_map[target_nutrient]
+    for i, target_nutrient in enumerate(target_nutrients):
+        nutrient_data = nutrient_map[target_nutrient]
+        quantity = float(nutrient_data.get("quantity", 0.0))
+        quantity_row[i] = quantity
 
     return quantity_row
 
@@ -34,13 +31,15 @@ def map_to_food_nutrient_matrix(foods: list, target_nutrients: list):
 
 def create_nutrients_summary(food):
     summary = dict()
-    for nutrient_id in vegan_foods.target_nutrients():
-        for nutrient in food['constituents']:
-            if nutrient['euroFirId'] == nutrient_id and 'quantity' in nutrient:
-                quantity = nutrient['quantity']
-                name = nutrient['nutrientName']
-                if float(quantity) > 0.0:
-                    summary[name] = f"{quantity} {nutrient['unit']}"
+    nutrients = food['constituents']
+    selected_nutrients = {k: nutrients[k] for k in vegan_foods.target_nutrients()} # filter the dict
+    for key, nutrient_data in selected_nutrients.items():
+        if 'quantity' in nutrient_data:
+            quantity = nutrient_data['quantity']
+            if float(quantity) > 0.0:
+                name = nutrient_data['nutrientName']
+                unit = nutrient_data['unit']
+                summary[name] = f"{quantity} {unit}"
     return summary
 
 
