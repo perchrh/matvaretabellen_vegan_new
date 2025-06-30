@@ -90,7 +90,8 @@ if __name__ == "__main__":
     grouped = group_by_ordered(sorted_foods,
                                key_func=lambda w: w['foodGroupName'].split(".")[0])  # group by main food group
     top_n = 10
-    for group, values in grouped.items():
+    for group in sorted(grouped.keys()):
+        values = grouped[group]
         print("++", group, "++")
         number = 1
         for item in values[:top_n]:
