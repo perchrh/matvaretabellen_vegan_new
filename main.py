@@ -109,12 +109,12 @@ if __name__ == "__main__":
     for idx, count in sorted_dominate_count:
         sorted_foods.append(foods[idx])
 
-    grouped = group_by_ordered(sorted_foods,
-                               key_func=lambda w: w['foodGroupName'].split(".")[0])  # group by main food group
+    grouped = group_by_ordered(sorted_foods, key_func=lambda w: w['foodGroupId'])  # group by main food group
     top_n = 10
-    for group in sorted(grouped.keys()): # present groups in alphabetic order by name
+    for group in sorted(grouped.keys()):  # present groups in alphabetic order by name
         values = grouped[group]
-        print("++", group, "++")
+        group_name = values[0]['foodGroupName']
+        print("++", group_name, "++")
         number = 1
         for item in values[:top_n]:
             print(number, item['foodName'], create_nutrients_summary(item))

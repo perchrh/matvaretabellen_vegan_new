@@ -19,6 +19,21 @@ def is_vegan(food):
     return no_non_vegan_langual_codes
 
 
+def is_uninteresting(food: dict) -> bool:
+    langual_codes = set(food.get('langualCodes', []))
+    # Filter out some dried foods, to prefer the cooked/wet entries for the same
+    is_dried_legumes = "A0831" in langual_codes and "J0116" in langual_codes and not "H0259" in langual_codes
+
+    category = food.get('foodGroupId')
+    main_category = category.split(".")[0] if category else None
+    # ignore animal-only categories, spices, alcoholic beverages, fizzy drinks and energy drinks, pure oils,
+    # coffee and tea, water
+    uninteresting = (int(main_category) in [1, 2, 3, 4, 11, 16] or
+                     category in ["8.2", "8.3", "9.1", "9.3", "9.4", "9.6", "10.5", "10.11"])
+
+    return is_dried_legumes or uninteresting
+
+
 def find_relevant_vegan_foods():
     foods = read_foods_json("foods.json", "food-groups.json", "nutrients.json")
     relevant_foods = []
@@ -26,10 +41,8 @@ def find_relevant_vegan_foods():
     for food in foods['foods']:
         if not is_vegan(food):
             continue
-        langual_codes = set(food.get('langualCodes', []))
-        # Filter out some dried foods, to prefer the cooked/wet entries for the same
-        is_dried_legumes = "A0831" in langual_codes and "J0116" in langual_codes and not "H0259" in langual_codes
-        if is_dried_legumes:
+
+        if is_uninteresting(food):
             continue
 
         nutrient_ids = set(key for key, entry in food['constituents'].items() if entry.get("quantity"))
