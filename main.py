@@ -111,7 +111,7 @@ if __name__ == "__main__":
 
     grouped = group_by_ordered(sorted_foods, key_func=lambda w: w['foodGroupId'])  # group by main food group
     top_n = 10
-    for group in sorted(grouped.keys()):  # present groups in alphabetic order by name
+    for group in sorted(grouped.keys()):  # present groups in alphabetic order by id
         values = grouped[group]
         group_name = values[0]['foodGroupName']
         print("++", group_name, "++")

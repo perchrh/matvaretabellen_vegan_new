@@ -7,6 +7,12 @@ non_vegan_langual_codes = dynamically_determine_non_vegan_langual_codes()
 
 
 def is_vegan(food):
+    food_group = food['foodGroupId']
+    main_group = food_group.split(".")[0]
+    if main_group in ["6", "12", "13"] or food_group in "9.5":
+        # vegetables, fruits and berries are vegan, and plant-based drinks
+        return True
+
     for key, data in food['constituents'].items():
         if key in non_vegan_nutrients:
             if data.get('quantity') not in (None, 0.0):
@@ -28,7 +34,7 @@ def is_uninteresting(food: dict) -> bool:
     main_category = category.split(".")[0] if category else None
     # ignore animal-only categories, spices, alcoholic beverages, fizzy drinks and energy drinks, pure oils,
     # coffee and tea, water
-    uninteresting = (int(main_category) in [1, 2, 3, 4, 11, 16] or
+    uninteresting = (main_category in ["1", "2", "3", "4", "11", "16"] or
                      category in ["8.2", "8.3", "9.1", "9.3", "9.4", "9.6", "10.5", "10.11"])
 
     return is_dried_legumes or uninteresting
