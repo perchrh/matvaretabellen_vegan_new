@@ -2,7 +2,6 @@ from collections import OrderedDict
 
 import numpy as np
 
-import vegan_foods
 from vegan_foods.utils import logger
 
 
@@ -44,20 +43,6 @@ def map_to_food_nutrient_matrix(foods: list, target_nutrients: list):
         food_matrix[food_row] = safe_get_quantity_row(food, target_nutrients)
 
     return food_matrix
-
-
-def create_nutrients_summary(food):
-    summary = dict()
-    nutrients = food['constituents']
-    selected_nutrients = {k: nutrients[k] for k in vegan_foods.target_nutrients()}  # filter the dict
-    for key, nutrient_data in selected_nutrients.items():
-        if 'quantity' in nutrient_data:
-            quantity = nutrient_data['quantity']
-            if float(quantity) > 0.0:
-                name = nutrient_data['nutrientName']
-                unit = nutrient_data['unit']
-                summary[name] = f"{quantity} {unit}"
-    return summary
 
 
 def sort_by_least_dominated(foods, F):
