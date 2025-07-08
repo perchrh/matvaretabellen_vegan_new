@@ -46,18 +46,11 @@ def read_langual_json(file_path: str = 'langual.json') -> Optional[Dict[str, Any
     Returns:
         dict: Parsed JSON data
     """
-    try:
-        # Get the absolute path to the data file
-        abs_file_path = get_data_file_path(file_path)
-        with open(abs_file_path, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-        return data
-    except FileNotFoundError:
-        logger.debug("Error: File '%s' not found.", file_path)
-        return None
-    except json.JSONDecodeError:
-        logger.debug("Error: Unable to parse '%s' as JSON.", file_path)
-        return None
+    # Get the absolute path to the data file
+    abs_file_path = get_data_file_path(file_path)
+    with open(abs_file_path, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    return data
 
 
 def find_non_vegan_langual_codes() -> Set[str]:
@@ -69,8 +62,13 @@ def find_non_vegan_langual_codes() -> Set[str]:
     """
     data = read_langual_json()
 
+    # Return empty set if data is None
+    if data is None:
+        logger.warning("No langual data found. Returning empty set of non-vegan codes.")
+        return set()
+
     # Keywords that indicate non-vegan ingredients
-    non_vegan_keywords: List[str] = [
+    non_vegan_keywords = [
         'egg', 'eggs', 'albumin', 'yolk',
         'milk', 'dairy', 'cheese', 'cream', 'lactose', 'casein', 'whey',
         'honey', 'beeswax', 'propolis', 'royal jelly',
@@ -85,7 +83,7 @@ def find_non_vegan_langual_codes() -> Set[str]:
     ]
     allowed_keywords = {"analog", "fruit", "imitation", "substitute", "mushroom", "analogue", "substitutes", "fungus"}
 
-    non_vegan_codes: Set[str] = set()
+    non_vegan_codes = set()
 
     # Check if the data has a 'langual' key or is a list directly
     langual_items = data.get('langual', data) if isinstance(data, dict) else data

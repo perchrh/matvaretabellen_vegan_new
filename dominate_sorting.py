@@ -1,8 +1,9 @@
 from collections import OrderedDict
-from typing import Dict, List, Tuple, Any, Callable, TypeVar
+from typing import Dict, List, Tuple, Callable, TypeVar
 
 import numpy as np
 
+from vegan_foods.food import Food
 from vegan_foods.utils import logger
 
 T = TypeVar('T')
@@ -22,15 +23,14 @@ def quantity_in_mcg(quantity_raw: float, unit: str) -> float:
         raise Exception("unknown unit %s", unit)
 
 
-def safe_get_quantity_row(food: Dict[str, Any], target_nutrients: List[str]) -> np.ndarray:
+def safe_get_quantity_row(food: Food, target_nutrients: List[str]) -> np.ndarray:
     quantity_row = np.zeros(len(target_nutrients))
 
-    nutrient_map = food['constituents']
     # Fill the quantity row based on target nutrients, in order
     for i, target_nutrient in enumerate(target_nutrients):
-        nutrient_data = nutrient_map[target_nutrient]
-        quantity_raw = float(nutrient_data.get("quantity", 0.0))
-        unit = nutrient_data.get("unit", "g")
+        nutrient_data = food.nutrients[target_nutrient]
+        quantity_raw = float(nutrient_data.quantity)
+        unit = nutrient_data.unit
         # We don't assume the same nutrient is always listed in the same unit, e.g. that calcium is always listed in 'mg'
         quantity = quantity_in_mcg(quantity_raw, unit)
 
@@ -39,7 +39,7 @@ def safe_get_quantity_row(food: Dict[str, Any], target_nutrients: List[str]) -> 
     return quantity_row
 
 
-def map_to_food_nutrient_matrix(foods: List[Dict[str, Any]], target_nutrients: List[str]) -> np.ndarray:
+def map_to_food_nutrient_matrix(foods: List[Food], target_nutrients: List[str]) -> np.ndarray:
     # Pre-allocate numpy array
     food_matrix = np.zeros((len(foods), len(target_nutrients)))
 
@@ -49,7 +49,7 @@ def map_to_food_nutrient_matrix(foods: List[Dict[str, Any]], target_nutrients: L
     return food_matrix
 
 
-def sort_by_least_dominated(foods: List[Dict[str, Any]], F: np.ndarray) -> List[Tuple[int, int]]:
+def sort_by_least_dominated(foods: List[Food], F: np.ndarray) -> List[Tuple[int, int]]:
     logger.debug("food_matrix created of shape %s", np.shape(F))
 
     def dominates(a: np.ndarray, b: np.ndarray) -> bool:
@@ -78,9 +78,10 @@ def group_by_ordered(iterable: List[T], key_func: Callable[[T], K]) -> OrderedDi
     return grouped
 
 
-def group_by_food_group(foods: List[Dict[str, Any]], sorted_dominate_count: List[Tuple[int, int]]) -> OrderedDict:
-    sorted_foods: List[Dict[str, Any]] = list()
+def group_by_food_group(foods: List[Food], sorted_dominate_count: List[Tuple[int, int]]) -> OrderedDict:
+    sorted_foods: List[Food] = list()
     for idx, count in sorted_dominate_count:
         sorted_foods.append(foods[idx])
-    grouped = group_by_ordered(sorted_foods, key_func=lambda w: w['foodGroupId'])  # group by main food group
+
+    grouped = group_by_ordered(sorted_foods, key_func=lambda food: food.group_id)  # group by main food group
     return grouped
