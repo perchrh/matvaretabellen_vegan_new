@@ -53,8 +53,7 @@ if __name__ == "__main__":
     foods = vegan_foods.food_list()
     target_nutrients = vegan_foods.target_nutrients()
 
-    status = ["considering", len(foods), "foods", "regarding", len(target_nutrients), "nutrients"]
-    logger.info(" ".join(str(x) for x in status))
+    logger.info(f"Searching among {len(foods)} foods regarding {len(target_nutrients)} nutrients...")
 
     F = map_to_food_nutrient_matrix(foods, target_nutrients)
     sorted_dominate_count = sort_by_least_dominated(foods, F)

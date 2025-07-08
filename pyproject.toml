@@ -1,10 +1,9 @@
 [project]
-name = "matvaretabellen-moo"
-version = "0.1.0"
+name = "matvaretabellen-vegan"
+version = "1.0.0"
 description = "Multi-objective optimization for vegan foods from Matvaretabellen"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "pymoo",
     "numpy"
 ]
