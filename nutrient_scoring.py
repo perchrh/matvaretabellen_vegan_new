@@ -1,5 +1,11 @@
-def sort_by_nutrient_score(foods, F, target_nutrients, sorted_dominate_count):
-    toplists = dict()
+from typing import Dict, List, Tuple, Any
+
+import numpy as np
+
+
+def sort_by_nutrient_score(foods: List[Dict[str, Any]], F: np.ndarray, target_nutrients: List[str],
+                           sorted_dominate_count: List[Tuple[int, int]]) -> List[Dict[str, Any]]:
+    toplists: Dict[str, List[Tuple[str, float]]] = dict()
     # now populate the lists from the food matrix
     for fidx, food in enumerate(foods):
         target_nutrient_values = F[fidx]  # array of normalized nutrient quantities per food
@@ -10,15 +16,15 @@ def sort_by_nutrient_score(foods, F, target_nutrients, sorted_dominate_count):
             if nutrient_value > 0.0:
                 toplists[nutrient].append((food['foodId'], nutrient_value))
 
-    toplisted_foods = dict()
+    toplisted_foods: Dict[str, List[str]] = dict()
     for n in target_nutrients:
         toplists[n].sort(key=lambda w: -w[1])  # sort by descending order of nutrient quantity
         toplist_positions = [e[0] for e in toplists[n]]  # foodId only
         toplisted_foods[n] = toplist_positions
 
-    def food_score(food):
+    def food_score(food: Dict[str, Any]) -> float:
         id = food['foodId']
-        nutrient_score = 0
+        nutrient_score = 0.0
         for n in target_nutrients:
             try:
                 position = toplisted_foods[n].index(id)  # rank among foods having this nutrient

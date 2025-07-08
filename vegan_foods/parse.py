@@ -1,9 +1,10 @@
 import json
+from typing import Dict, List, Any, Set
 
 from vegan_foods.utils import get_data_file_path
 
 
-def read_foods_json(foods: str, groups: str, nutrients: str) -> dict:
+def read_foods_json(foods: str, groups: str, nutrients: str) -> Dict[str, Any]:
     """
     Read and parse the api files
     Returns:
@@ -22,18 +23,18 @@ def read_foods_json(foods: str, groups: str, nutrients: str) -> dict:
     with open(abs_nutrient_file_path, 'r', encoding='utf-8') as file:
         nutrients_data = json.load(file)
 
-    def get_nutrient_detail(nutrient_id):
+    def get_nutrient_detail(nutrient_id: str) -> List[Dict[str, Any]]:
         all_nutrients = nutrients_data["nutrients"]
         nutrient_data = [n for n in all_nutrients if n['nutrientId'] == nutrient_id]
         return nutrient_data
 
-    group_id_to_name = dict()
+    group_id_to_name: Dict[str, str] = dict()
     for group in group_data['foodGroups']:
         group_id = group['foodGroupId']
         group_name = group['name']
         group_id_to_name[group_id] = group_name
 
-    invalid_nutrient_ids = set()
+    invalid_nutrient_ids: Set[str] = set()
     for food in data['foods']:
         # enrich with food group name
         group_id = food['foodGroupId']
@@ -41,7 +42,7 @@ def read_foods_json(foods: str, groups: str, nutrients: str) -> dict:
         food['foodGroupName'] = group_name
 
         # enrich nutrient data
-        valid_nutrients_dict = dict()
+        valid_nutrients_dict: Dict[str, Dict[str, Any]] = dict()
         for constituent in food['constituents']:
             nutrient_id = constituent['nutrientId']
             nutrient_detail = get_nutrient_detail(nutrient_id)

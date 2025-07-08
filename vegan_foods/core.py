@@ -1,3 +1,5 @@
+from typing import Dict, List, Any, Set
+
 from vegan_foods.find_non_vegan_langual_codes import dynamically_determine_non_vegan_langual_codes
 from vegan_foods.nutrients import nutrients_to_avoid, target_nutrients
 from vegan_foods.parse import read_foods_json
@@ -6,7 +8,7 @@ non_vegan_nutrients = nutrients_to_avoid()
 non_vegan_langual_codes = dynamically_determine_non_vegan_langual_codes()
 
 
-def is_vegan(food):
+def is_vegan(food: Dict[str, Any]) -> bool:
     food_group = food['foodGroupId']
     main_group = food_group.split(".")[0]
     if main_group in ["6", "12", "13"] or food_group in "9.5":
@@ -25,7 +27,7 @@ def is_vegan(food):
     return no_non_vegan_langual_codes
 
 
-def is_uninteresting(food: dict) -> bool:
+def is_uninteresting(food: Dict[str, Any]) -> bool:
     langual_codes = set(food.get('langualCodes', []))
     # Filter out some dried foods, to prefer the cooked/wet entries for the same
     is_dried_legumes = "A0831" in langual_codes and "J0116" in langual_codes and not "H0259" in langual_codes
@@ -40,9 +42,9 @@ def is_uninteresting(food: dict) -> bool:
     return is_dried_legumes or uninteresting
 
 
-def find_relevant_vegan_foods():
+def find_relevant_vegan_foods() -> List[Dict[str, Any]]:
     foods = read_foods_json("foods.json", "food-groups.json", "nutrients.json")
-    relevant_foods = []
+    relevant_foods: List[Dict[str, Any]] = []
 
     for food in foods['foods']:
         if not is_vegan(food):
@@ -51,8 +53,8 @@ def find_relevant_vegan_foods():
         if is_uninteresting(food):
             continue
 
-        nutrient_ids = set(key for key, entry in food['constituents'].items() if entry.get("quantity"))
-        target_nutrient_ids = set(target_nutrients())
+        nutrient_ids: Set[str] = set(key for key, entry in food['constituents'].items() if entry.get("quantity"))
+        target_nutrient_ids: Set[str] = set(target_nutrients())
         if target_nutrient_ids.intersection(nutrient_ids):
             relevant_foods.append(food)
 

@@ -1,11 +1,15 @@
 from collections import OrderedDict
+from typing import Dict, List, Tuple, Any, Callable, TypeVar
 
 import numpy as np
 
 from vegan_foods.utils import logger
 
+T = TypeVar('T')
+K = TypeVar('K')
 
-def quantity_in_mcg(quantity_raw, unit):
+
+def quantity_in_mcg(quantity_raw: float, unit: str) -> float:
     if unit == 'g':
         return quantity_raw * 1000000.0
     elif unit == 'mg':
@@ -18,7 +22,7 @@ def quantity_in_mcg(quantity_raw, unit):
         raise Exception("unknown unit %s", unit)
 
 
-def safe_get_quantity_row(food, target_nutrients: list):
+def safe_get_quantity_row(food: Dict[str, Any], target_nutrients: List[str]) -> np.ndarray:
     quantity_row = np.zeros(len(target_nutrients))
 
     nutrient_map = food['constituents']
@@ -35,7 +39,7 @@ def safe_get_quantity_row(food, target_nutrients: list):
     return quantity_row
 
 
-def map_to_food_nutrient_matrix(foods: list, target_nutrients: list):
+def map_to_food_nutrient_matrix(foods: List[Dict[str, Any]], target_nutrients: List[str]) -> np.ndarray:
     # Pre-allocate numpy array
     food_matrix = np.zeros((len(foods), len(target_nutrients)))
 
@@ -45,10 +49,10 @@ def map_to_food_nutrient_matrix(foods: list, target_nutrients: list):
     return food_matrix
 
 
-def sort_by_least_dominated(foods, F):
+def sort_by_least_dominated(foods: List[Dict[str, Any]], F: np.ndarray) -> List[Tuple[int, int]]:
     logger.debug("food_matrix created of shape %s", np.shape(F))
 
-    def dominates(a, b):
+    def dominates(a: np.ndarray, b: np.ndarray) -> bool:
         # Candidate 'a' dominates 'b' if the below is true
         return np.all(a >= b) and np.any(a > b)
 
@@ -57,15 +61,15 @@ def sort_by_least_dominated(foods, F):
     # If multiple foods have the same count of dominated by other foods ("dominate_count"), they come in arbitrary order,
     # i.e. all foods dominated by 1 other foods come before those dominated by 2, and
     # there is no secondary level of sorting within those with the same "dominate_count".
-    dominate_count = dict()
+    dominate_count: Dict[int, int] = dict()
     for idx, food in enumerate(foods):
         count = sum(dominates(F[i], F[idx]) for i in range(len(F)) if i != idx)
         dominate_count[idx] = count
     return sorted(dominate_count.items(), key=lambda x: x[1])
 
 
-def group_by_ordered(iterable, key_func):
-    grouped = OrderedDict()
+def group_by_ordered(iterable: List[T], key_func: Callable[[T], K]) -> OrderedDict:
+    grouped: OrderedDict = OrderedDict()
     for item in iterable:
         key = key_func(item)
         if key not in grouped:
@@ -74,8 +78,8 @@ def group_by_ordered(iterable, key_func):
     return grouped
 
 
-def group_by_food_group(foods, sorted_dominate_count):
-    sorted_foods = list()
+def group_by_food_group(foods: List[Dict[str, Any]], sorted_dominate_count: List[Tuple[int, int]]) -> OrderedDict:
+    sorted_foods: List[Dict[str, Any]] = list()
     for idx, count in sorted_dominate_count:
         sorted_foods.append(foods[idx])
     grouped = group_by_ordered(sorted_foods, key_func=lambda w: w['foodGroupId'])  # group by main food group

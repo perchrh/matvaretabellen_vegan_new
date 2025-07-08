@@ -1,6 +1,7 @@
 import json
 import logging
 import re
+from typing import Dict, List, Set, Any, Optional
 
 from vegan_foods.utils import get_data_file_path, logger
 
@@ -23,7 +24,7 @@ allow_listed_langual_codes = {
     "A0840",  # Beverage (NON-MILK) (EUROFIR)
     "P0200",  # No pork added
     "P0201",  # No beef added
-    "P0175"  # Egg free claim or use
+    "P0175",  # Egg free claim or use
     "A1220",  # Classification of products of plant and animal origin, european community
     "B1087",  # Human as milk source (assumed consensual)
     "C0001",  # Part of plant or animal not known
@@ -35,7 +36,7 @@ allow_listed_langual_codes = {
 }
 
 
-def read_langual_json(file_path='langual.json'):
+def read_langual_json(file_path: str = 'langual.json') -> Optional[Dict[str, Any]]:
     """
     Read and parse the langual.json file
 
@@ -59,7 +60,7 @@ def read_langual_json(file_path='langual.json'):
         return None
 
 
-def find_non_vegan_langual_codes():
+def find_non_vegan_langual_codes() -> Set[str]:
     """
     Find LanguaL codes that contain non-vegan keywords
 
@@ -69,7 +70,7 @@ def find_non_vegan_langual_codes():
     data = read_langual_json()
 
     # Keywords that indicate non-vegan ingredients
-    non_vegan_keywords = [
+    non_vegan_keywords: List[str] = [
         'egg', 'eggs', 'albumin', 'yolk',
         'milk', 'dairy', 'cheese', 'cream', 'lactose', 'casein', 'whey',
         'honey', 'beeswax', 'propolis', 'royal jelly',
@@ -82,10 +83,9 @@ def find_non_vegan_langual_codes():
         'bone', 'blood', 'organ',
         'isinglass', 'carmine', 'cochineal', 'shellac'
     ]
-    allowed_keywords = {"analog", "fruit", "imitation", "substitute", "mushroom", "analogue",
-                        "substitutes", "fungus"}
+    allowed_keywords = {"analog", "fruit", "imitation", "substitute", "mushroom", "analogue", "substitutes", "fungus"}
 
-    non_vegan_codes = set()
+    non_vegan_codes: Set[str] = set()
 
     # Check if the data has a 'langual' key or is a list directly
     langual_items = data.get('langual', data) if isinstance(data, dict) else data
@@ -107,7 +107,7 @@ def find_non_vegan_langual_codes():
     return non_vegan_codes
 
 
-def dynamically_determine_non_vegan_langual_codes():
+def dynamically_determine_non_vegan_langual_codes() -> List[str]:
     """
     Create a comprehensive list of non-vegan LanguaL codes
     """
@@ -121,7 +121,7 @@ def dynamically_determine_non_vegan_langual_codes():
     return sorted(all_undesired_langual_codes)
 
 
-def main():
+def main() -> None:
     logging.basicConfig(level=logging.DEBUG, format='%(name)s - %(levelname)s - %(message)s')
 
     logger.debug("Searching for non-vegan LanguaL codes...")

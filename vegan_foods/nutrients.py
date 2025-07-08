@@ -1,4 +1,7 @@
-def target_nutrients():
+from typing import List, Set
+
+
+def target_nutrients() -> List[str]:
     # as Euro FIR codes, in order
     return [
         "VITA",  # Vitamin A
@@ -13,7 +16,7 @@ def target_nutrients():
     ]
 
 
-def nutrients_to_avoid():
+def nutrients_to_avoid() -> Set[str]:
     # as Euro FIR codes
     return {
         "FATRS",  # Trans-fats, always animal-derived
